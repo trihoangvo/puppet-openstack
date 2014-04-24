@@ -267,6 +267,7 @@ class openstack::controller (
   $bridge_uplinks          = undef,
   $bridge_mappings         = undef,
   $enable_ovs_agent        = true,
+  $enable_ovsml2_agent     = false,
   $enable_dhcp_agent       = true,
   $enable_l3_agent         = true,
   $enable_metadata_agent   = true,

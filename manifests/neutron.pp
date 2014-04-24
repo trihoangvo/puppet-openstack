@@ -174,6 +174,7 @@ class openstack::neutron (
   $enable_l3_agent        = false,
   $enable_metadata_agent  = false,
   $enable_ovs_agent       = false,
+  $enable_ovsml2_agent    = false,
   # OVS settings
   $tenant_network_type    = 'gre',
   $network_vlan_ranges    = undef,
@@ -238,15 +239,28 @@ class openstack::neutron (
     } else {
       fail("Unsupported db type: ${db_type}. Only mysql is currently supported.")
     }
+
     class { 'neutron::server':
       auth_host     => $keystone_host,
       auth_password => $user_password,
     }
-    class { 'neutron::plugins::ovs':
-      sql_connection      => $sql_connection,
-      sql_idle_timeout    => $sql_idle_timeout,
-      tenant_network_type => $tenant_network_type,
-      network_vlan_ranges => $network_vlan_ranges,
+
+    # Configure nova notifications system
+    class { 'neutron::server::notifications':
+      nova_url                => "http://${keystone_host}:8774/v2",
+      nova_admin_auth_url     => "http://${keystone_host}:35357/v2.0",
+      nova_admin_tenant_name  => $nova_admin_tenant_name,
+      nova_admin_password     => $nova_user_password,
+    }
+    
+    # ml2 plugin
+    class { 'neutron::plugins::ml2':
+      type_drivers            => ['gre'],
+      tenant_network_types    => ['gre'],
+      mechanism_drivers       => ['openvswitch', 'l2population'],
+      tunnel_id_ranges        => ['1:1000'],
+      enable_security_group   => true,
+      require                 => Class['neutron::server'],
     }
   }
 
@@ -257,6 +271,24 @@ class openstack::neutron (
       enable_tunneling => $ovs_enable_tunneling,
       local_ip         => $ovs_local_ip,
       firewall_driver  => $firewall_driver,
+    }
+  }
+
+  if $enable_ovsml2_agent {
+    class { 'neutron::agents::ovsml2':
+      bridge_uplinks   => $bridge_uplinks,
+      bridge_mappings  => $bridge_mappings,
+      enable_tunneling => $ovs_enable_tunneling,
+      local_ip         => $ovs_local_ip,
+    }
+    class { 'neutron::plugins::ml2':
+      type_drivers            => ['gre'],
+      tenant_network_types    => ['gre'],
+      mechanism_drivers       => ['openvswitch', 'l2population'],
+      tunnel_id_ranges        => ['1:1000'],
+      enable_security_group   => true,
+      firewall_driver         => $firewall_driver,
+      require                 => Class['neutron::agents::ovsml2'],
     }
   }
 

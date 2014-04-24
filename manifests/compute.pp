@@ -61,6 +61,7 @@ class openstack::compute (
   $neutron_admin_tenant_name     = 'services',
   $neutron_admin_user            = 'neutron',
   $enable_ovs_agent              = true,
+  $enable_ovsml2_agent           = false,
   $enable_l3_agent               = false,
   $enable_dhcp_agent             = false,
   $neutron_auth_url              = 'http://127.0.0.1:35357/v2.0',
@@ -233,6 +234,7 @@ class openstack::compute (
       rabbit_password      => $rabbit_password,
       # Neutron OVS
       enable_ovs_agent     => $enable_ovs_agent,
+      enable_ovsml2_agent  => $enable_ovsml2_agent,
       ovs_enable_tunneling => $ovs_enable_tunneling,
       firewall_driver      => $neutron_firewall_driver,
       # Neutron L3 Agent
