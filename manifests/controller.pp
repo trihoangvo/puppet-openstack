@@ -177,6 +177,7 @@ class openstack::controller (
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
+  $db_charset              = 'utf8',
   $mysql_account_security  = true,
   $mysql_bind_address      = '0.0.0.0',
   $sql_idle_timeout        = undef,
@@ -348,6 +349,7 @@ class openstack::controller (
       neutron_db_password    => $neutron_db_password,
       neutron_db_dbname      => $neutron_db_name,
       allowed_hosts          => $allowed_hosts,
+      charset                => $db_charset,
       enabled                => $enabled,
     }
   } else {
