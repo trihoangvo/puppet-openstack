@@ -204,7 +204,8 @@ class openstack::neutron (
   $db_user                = 'neutron',
   $sql_idle_timeout       = '3600',
   # Plugin
-  $core_plugin            = undef,
+  $core_plugin            = 'ml2',
+  $service_plugins        = undef,
   # General
   $bind_address           = '0.0.0.0',
   $keystone_host          = '127.0.0.1',
@@ -217,6 +218,7 @@ class openstack::neutron (
   class { '::neutron':
     enabled               => $enabled,
     core_plugin           => $core_plugin,
+    service_plugins       => $service_plugins,
     bind_host             => $bind_address,
     allow_overlapping_ips => $allow_overlapping_ips,
     rabbit_host           => $rabbit_host,
@@ -282,7 +284,7 @@ class openstack::neutron (
       enable_tunneling => $ovs_enable_tunneling,
       local_ip         => $ovs_local_ip,
       l2_population    => true,
-      firewall_driver  => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
+      firewall_driver  => $firewall_driver,
       #enable if we have ovs >= 2.1
       #arp_responder           => true,
     }

@@ -170,7 +170,6 @@ class openstack::controller (
   # optional. Not sure what to do about this.
   $neutron_user_password   = false,
   $neutron_db_password     = false,
-  $neutron_core_plugin     = undef,
   $cinder_user_password    = false,
   $cinder_db_password      = false,
   $swift_user_password     = false,
@@ -257,6 +256,8 @@ class openstack::controller (
   $iscsi_ip_address        = '127.0.0.1',
   # Neutron
   $neutron                 = true,
+  $neutron_core_plugin     = undef,
+  $neutron_service_plugins = undef,
   $physical_network        = 'default',
   $tenant_network_type     = 'gre',
   $ovs_enable_tunneling    = true,
@@ -552,6 +553,7 @@ class openstack::controller (
       db_password           => $neutron_db_password,
       # Plugin
       core_plugin           => $neutron_core_plugin,
+      service_plugins       => $neutron_service_plugins,
       # Neutron agents
       enable_dhcp_agent     => $enable_dhcp_agent,
       enable_l3_agent       => $enable_l3_agent,
