@@ -241,8 +241,9 @@ class openstack::neutron (
     }
 
     class { 'neutron::server':
-      auth_host     => $keystone_host,
-      auth_password => $user_password,
+      database_connection     => $sql_connection,
+      auth_host               => $keystone_host,
+      auth_password           => $user_password,
     }
 
     # Configure nova notifications system
