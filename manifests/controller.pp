@@ -276,6 +276,7 @@ class openstack::controller (
   $firewall_driver         = 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
   $neutron_db_user         = 'neutron',
   $neutron_db_name         = 'neutron',
+  $neutron_bind_address    = '0.0.0.0',
   $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
   $enable_neutron_server   = true,
   $security_group_api      = 'neutron',
@@ -564,6 +565,7 @@ class openstack::controller (
       use_syslog            => $use_syslog,
       log_facility          => $log_facility,
       # General
+      bind_address          => $neutron_bind_address,
       enabled               => $enabled,
       enable_server         => $enable_neutron_server,
       debug                 => $debug,
