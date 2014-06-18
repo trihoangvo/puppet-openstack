@@ -72,7 +72,8 @@ class openstack::horizon (
   $keystone_scheme       = 'http',
   $keystone_default_role = '_member_',
   $django_debug          = 'False',
-  $api_result_limit      = 1000
+  $api_result_limit      = 1000,
+  $allow_hosts           = '127.0.0.1',
 ) {
 
   if $configure_memcached {
@@ -90,6 +91,7 @@ class openstack::horizon (
   }
 
   class { '::horizon':
+    fqdn                  => $allow_hosts,
     cache_server_ip       => $cache_server_ip,
     cache_server_port     => $cache_server_port,
     secret_key            => $secret_key,

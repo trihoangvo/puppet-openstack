@@ -238,6 +238,7 @@ class openstack::controller (
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
+  $horizon_allow_hosts     = '127.0.0.1',
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
@@ -620,6 +621,7 @@ class openstack::controller (
       cache_server_port => $cache_server_port,
       horizon_app_links => $horizon_app_links,
       keystone_host     => $keystone_host,
+      allow_hosts       => $horizon_allow_hosts,
     }
   }
 
