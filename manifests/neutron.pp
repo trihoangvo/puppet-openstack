@@ -275,11 +275,15 @@ class openstack::neutron (
   }
 
   if $enable_ovsml2_agent {
-    class { 'neutron::agents::ovsml2':
+    class { 'neutron::agents::ml2::ovs':
       bridge_uplinks   => $bridge_uplinks,
       bridge_mappings  => $bridge_mappings,
       enable_tunneling => $ovs_enable_tunneling,
       local_ip         => $ovs_local_ip,
+      l2_population    => true,
+      firewall_driver  => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
+      #enable if we have ovs >= 2.1
+      #arp_responder           => true,
     }
     class { 'neutron::plugins::ml2':
       type_drivers            => ['gre'],
@@ -287,8 +291,6 @@ class openstack::neutron (
       mechanism_drivers       => ['openvswitch', 'l2population'],
       tunnel_id_ranges        => ['1:1000'],
       enable_security_group   => true,
-      firewall_driver         => $firewall_driver,
-      require                 => Class['neutron::agents::ovsml2'],
     }
   }
 
