@@ -263,7 +263,6 @@ class openstack::neutron (
       mechanism_drivers       => ['openvswitch', 'l2population'],
       tunnel_id_ranges        => ['1:1000'],
       enable_security_group   => true,
-      require                 => Class['neutron::server'],
     }
   }
 
